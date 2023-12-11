@@ -69,7 +69,10 @@ def make_animation(source_image, driving_video, generator, kp_detector, relative
             driving_frame = driving[:, :, frame_idx]
             if not cpu:
                 driving_frame = driving_frame.cuda()
-            kp_driving = kp_detector(driving_frame)
+            # kp_driving = kp_detector(driving_frame)
+            kp_driving = dict(kp_source)
+
+            kp_driving['value'] = kp_driving['value'] + torch.sin(kp_driving['value'])*0.005*frame_idx
             kp_norm = normalize_kp(kp_source=kp_source, kp_driving=kp_driving,
                                    kp_driving_initial=kp_driving_initial, use_relative_movement=relative,
                                    use_relative_jacobian=relative, adapt_movement_scale=adapt_movement_scale)
